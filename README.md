@@ -1,51 +1,60 @@
 # Sistema de Gestão Comercial - Loja de Materiais de Construção
 
-Este é um sistema completo para gestão de estoque, compras, vendas e dashboard administrativo, desenvolvido com Django e Django REST Framework.
+Sistema robusto e escalável desenvolvido para a digitalização completa de processos comerciais em lojas de materiais de construção. A solução substitui controles manuais por uma plataforma digital integrada, focada em integridade de dados e eficiência operacional.
 
-## Funcionalidades
-- **Autenticação JWT**: Login seguro com tokens.
-- **Gestão de Produtos**: Cadastro completo com SKU e imagens.
-- **Controle de Estoque**: Atualização automática via signals.
-- **Gestão de Compras**: Registro de NFs e contas a pagar.
-- **Gestão de Vendas**: Registro de saídas e contas a receber.
-- **Dashboard**: KPIs em tempo real.
-- **Relatórios**: Exportação para PDF e Excel.
+## 🏛️ Arquitetura do Sistema
 
-## Instalação
+O projeto segue a arquitetura **Monolítica Modularizada** utilizando o framework Django, com uma camada de API robusta via **Django REST Framework (DRF)**.
 
-1. Clone o repositório.
-2. Crie um ambiente virtual: `python -m venv .venv`
-3. Ative o ambiente virtual.
-4. Instale as dependências: `pip install -r requirements.txt`
-5. Configure as variáveis de ambiente (`DATABASE_URL`, `SECRET_KEY`, etc.).
-6. Execute as migrações: `python manage.py migrate`
-7. Crie um superusuário: `python manage.py createsuperuser`
-8. Inicie o servidor: `python manage.py runserver`
+### Camadas Principais:
+- **Core (gestao_comercial)**: Configurações globais, segurança e roteamento principal.
+- **Módulos de Negócio**: Divisão por aplicativos Django especializados, cada um com seus próprios modelos, serializers, views e lógica de sinais.
+- **Data Layer**: PostgreSQL como banco de dados relacional, utilizando constraints de integridade e triggers para auditoria.
+- **Middleware Layer**: Logs de acesso e segurança customizados.
 
-## API Endpoints
-- `/api/token/`: Obter token JWT.
-- `/api/categorias/`: CRUD de categorias.
-- `/api/produtos/`: CRUD de produtos.
-- `/api/compras/compras/`: CRUD de compras.
-- `/api/vendas/vendas/`: CRUD de vendas.
-- `/api/dashboard/stats/`: KPIs do sistema.
-- `/api/reports/inventory/excel/`: Exportar estoque para Excel.
-- `/api/reports/sales/pdf/`: Exportar vendas para PDF.
+## 🚀 Tecnologias Empregadas
 
-## Deploy
-Configurado para deploy no Railway com PostgreSQL.
+- **Backend**: Python 3.13 / Django 6.0
+- **API**: Django REST Framework (DRF) com autenticação JWT (SimpleJWT)
+- **Banco de Dados**: PostgreSQL 14+
+- **Segurança**: Proteção CSRF, XSS, Rate Limiting e Criptografia Bcrypt
+- **Documentação Técnica**: Docstrings em conformidade com PEP 257
+- **Geração de Documentos**: ReportLab (PDF) e OpenPyXL (Excel)
 
-## Backup
-Script `backup_db.py` configurado para ser executado via GitHub Actions.
+## 📂 Estrutura de Pastas e Módulos
 
-## Testes
-O sistema possui testes unitários e de integração integrados ao fluxo de desenvolvimento:
-- **Testes Unitários**: Localizados em `products/tests.py`, validam modelos e labels.
-- **Testes de Integração**: Arquivos `tests_integration.py` e `tests_unittest.py` fornecem cobertura para API e fluxos de negócio.
-- **Verificação API**: `test_api.py` permite testes rápidos via `requests`.
-- **Labels Amigáveis**: O Django Admin foi customizado para exibir labels intuitivos (ex: "Nome do Produto" em vez de "SKU").
-
-Para executar os testes nativos:
-```bash
-python manage.py test
+```text
+Sistema_Gestao/
+├── dashboard/          # KPIs em tempo real e Logs de Acesso
+├── products/           # Gestão de Produtos, Categorias e Controle de Estoque
+├── purchases/          # Fornecedores, Notas Fiscais de Entrada e Contas a Pagar
+├── sales/              # Clientes, Vendas (PDV) e Contas a Receber
+├── reports/            # Motores de exportação (PDF/Excel)
+├── gestao_comercial/   # Configurações do Projeto (Settings/URLs)
+└── .github/            # Workflows de CI/CD e Backups Automáticos
 ```
+
+## 🛠️ Principais Componentes e Funcionalidades
+
+### 1. Módulo de Autenticação e Segurança
+- Autenticação baseada em tokens JWT para comunicação stateless segura.
+- Middleware de auditoria para registro de todos os acessos por IP, usuário e endpoint.
+
+### 2. Gestão de Produtos e Inventário
+- Cadastro técnico com SKU, descrição, unidade de medida e precificação dinâmica.
+- **Controle Automático de Estoque**: Implementação via Signals que processa entradas e saídas em tempo real, mantendo o saldo atualizado.
+- Alertas de estoque crítico baseados em níveis mínimos configuráveis.
+
+### 3. Fluxo de Compras (Suprimentos)
+- Gestão de fornecedores e registro de Notas Fiscais.
+- Automação financeira: Geração imediata de títulos no Contas a Pagar após validação de entrada de mercadoria.
+
+### 4. Fluxo de Vendas (Comercial)
+- Gestão de carteira de clientes e registro de saídas.
+- Integração financeira: Lançamento automático no Contas a Receber e atualização instantânea de inventário.
+
+### 5. Inteligência de Negócio (Dashboard)
+- Consolidação de KPIs: Vendas diárias/mensais, curva de produtos mais vendidos e visão geral de inadimplência.
+
+### 6. Sistema de Relatórios
+- Exportação de dados valorizados de estoque e histórico de vendas para conformidade contábil e administrativa.
