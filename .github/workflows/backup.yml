@@ -1,0 +1,26 @@
+name: Backup do Banco de Dados Diário
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # Executa às 3h da manhã todos os dias
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Código
+        uses: actions/checkout@v3
+        
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Instalar Dependências
+        run: pip install -r requirements.txt
+        
+      - name: Executar Backup
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          GOOGLE_DRIVE_CREDENTIALS: ${{ secrets.GOOGLE_DRIVE_CREDENTIALS }}
+        run: python backup_db.py
